@@ -25,7 +25,11 @@ Promise.resolve(MongoClient.connect(config.db.url))
 function insertPrices(prices) {
   return Promise.map(prices, (price) => {
     const priceList = db.collection('coins').findOne({ "Symbol": price['FROMSYMBOL'] })
-      .then(coin => coin.priceList);
+      .then(coin => coin.priceList)
+      .catch(e => {
+        console.log('Cannot find coin in database', price['FROMSYMBOL']);
+        console.log(e.stack);
+      });
 
     return priceList
       .then(list => list || [])

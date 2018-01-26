@@ -1,0 +1,19 @@
+{
+  "name": "ingest",
+  "version": "1.0.0",
+  "description": "A injest service that grabs all data we need from the web and feed to a data store.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Wang",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "cryptocompare": "^0.4.0",
+    "lodash": "^4.17.4",
+    "mongodb": "^3.0.1",
+    "node-fetch": "^1.7.3"
+  }
+}

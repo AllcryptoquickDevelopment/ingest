@@ -1,0 +1,5 @@
+.idea
+*.txt
+*.swp
+data/
+node_modules/

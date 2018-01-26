@@ -5,28 +5,52 @@ const Promise = require('bluebird');
 
 const price = require('./price');
 const common = require('./util/common');
+const logger = require('./util/logger');
+
+const Status = require('./model/status');
+
 const db = require('./db/db');
 const dbMeta = require('./db/meta');
 const dbPrice = require('./db/price');
+const dbStatus = require('./db/status');
 
-// common.getCoinList()
-//   .tap(l => console.log(l.length))
-//   .then(list => price.getAllPriceFull(list, ['BTC']))
-//   .then(console.log)
-//   .tap(() => console.log('Finished'));
+function saveMeta() {
+  // we first check if there is already coin data in db
+  const lastStatus = dbStatus.getLatestStatus();
 
+  return lastStatus.then(s => {
+    if (!s) {
+      return common.getCoinMeta().then(dbMeta.saveMeta);
+    }
 
-common.getCoinMeta()
-  // .then(dbMeta.saveMeta)
-  // .tap(() => console.log('meta saved'))
-  .then(common.getCoinList)
-  .then((list) => price.getAllPriceFull(list, ['BTC']))
-  .then(dbPrice.insertPrices)
-  .tap(() => console.log('price saved'))
-  .tap(db.closeConnection)
-  .tap(db.setupConnection)
-  .then(common.getCoinList)
-  .then((list) => price.getAllPriceFull(list, ['BTC']))
-  .then(dbPrice.insertPrices)
-  .tap(() => console.log('price saved'))
-  .tap(db.closeConnection)
+    return Promise.resolve();
+  })
+    .tap(() => logger.info('Coin meta saved'));
+}
+
+function updatePrice() {
+  return common.getCoinList()
+    .then(list => price.getAllPriceFull(list, ['BTC']))
+    .then(dbPrice.insertPrices)
+    .tap(() => logger.info('Coin price updated'));
+}
+
+function updateStatus(s) {
+  return dbStatus.updateStatus(s)
+    .tap(() => logger.info('Database status updated'))
+    .tap(() => {
+      if (!s.error) {
+        logger.info('No error');
+      } else {
+        logger.error(s.error);
+        console.log(s);
+      }
+    })
+}
+
+return db.setupConnection()
+  .then(saveMeta)
+  .then(updatePrice)
+  .then(() => updateStatus(new Status()))
+  .catch(e => updateStatus(new Status(e)))
+  .finally(db.closeConnection);

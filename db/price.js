@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 const db = require('./db');
+const logger = require('../util/logger');
 const config = require('../config');
 
 /**
@@ -14,8 +15,8 @@ function insertPrices(prices) {
     const priceList = db.db.collection('coins').findOne({ "Symbol": price['FROMSYMBOL'] })
       .then(coin => coin.priceList)
       .catch(e => {
-        console.log('Cannot find coin in database', price['FROMSYMBOL']);
-        console.log(e.stack);
+        logger.error('Cannot find coin in database', price['FROMSYMBOL']);
+        logger.error(e.stack);
       });
 
     return priceList
@@ -27,8 +28,8 @@ function insertPrices(prices) {
           { $set: { priceList: newList } });
       })
       .catch(e => {
-        console.log('Failed to update price for coin:', price['FROMSYMBOL']);
-        console.log(e.stack);
+        logger.error('Failed to update price for coin:', price['FROMSYMBOL']);
+        logger.error(e.stack);
         return null;
       });
   }, { concurrency: config.db.concurrency });

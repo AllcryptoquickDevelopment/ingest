@@ -1,22 +1,9 @@
 'use strict';
 
-const mongodb = require('mongodb');
 const Promise = require('bluebird');
 const _ = require('lodash');
-
-const MongoClient = mongodb.MongoClient;
-
+const db = require('./db');
 const config = require('../config');
-
-let db;
-
-Promise.resolve(MongoClient.connect(config.db.url))
-  .then(mongo => db = mongo.db('ingest'))
-  .tap(() => console.log('Connected to db', config.db.url))
-  .catch(e => {
-    console.log('Failed to connect to db', config.db.url);
-    throw e;
-  });
 
 /**
  * Insert prices into the Prices attr of each coin
@@ -24,7 +11,7 @@ Promise.resolve(MongoClient.connect(config.db.url))
  */
 function insertPrices(prices) {
   return Promise.map(prices, (price) => {
-    const priceList = db.collection('coins').findOne({ "Symbol": price['FROMSYMBOL'] })
+    const priceList = db.db.collection('coins').findOne({ "Symbol": price['FROMSYMBOL'] })
       .then(coin => coin.priceList)
       .catch(e => {
         console.log('Cannot find coin in database', price['FROMSYMBOL']);
@@ -35,7 +22,7 @@ function insertPrices(prices) {
       .then(list => list || [])
       .then(list => [price].concat(list)) // TODO don't append if the update time are same
       .then(newList => {
-        return db.collection('coins').updateOne(
+        return db.db.collection('coins').updateOne(
           { 'Symbol': price['FROMSYMBOL'] },
           { $set: { priceList: newList } });
       })

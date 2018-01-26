@@ -5,6 +5,7 @@ const Promise = require('bluebird');
 
 const price = require('./price');
 const common = require('./util/common');
+const db = require('./db/db');
 const dbMeta = require('./db/meta');
 const dbPrice = require('./db/price');
 
@@ -21,4 +22,11 @@ common.getCoinMeta()
   .then(common.getCoinList)
   .then((list) => price.getAllPriceFull(list, ['BTC']))
   .then(dbPrice.insertPrices)
-  .tap(() => console.log('price saved'));
+  .tap(() => console.log('price saved'))
+  .tap(db.closeConnection)
+  .tap(db.setupConnection)
+  .then(common.getCoinList)
+  .then((list) => price.getAllPriceFull(list, ['BTC']))
+  .then(dbPrice.insertPrices)
+  .tap(() => console.log('price saved'))
+  .tap(db.closeConnection)

@@ -6,7 +6,7 @@ module.exports = {
     batchDelay: 500 // ms
   },
   db: {
-    url: 'mongodb://localhost:27017',
+    url: 'mongodb://mongo:27017',
     concurrency: 30
   }
 };

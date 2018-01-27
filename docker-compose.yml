@@ -11,8 +11,10 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+	command: --sslMode requireSSL --sslPEMKeyFile /etc/cert/mongo-pem-key.pem --sslCAFile /etc/cert/rootCA.pem
     restart: always
     volumes:
+	  - /etc/cert:/etc/cert
       - /mongo_data:/data/db
     ports:
       - "27017:27017"

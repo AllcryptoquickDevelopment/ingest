@@ -11,5 +11,10 @@ module.exports = {
   },
   cron: {
     schedule: '10 * * * *'  // run the task each hour when minute is 10 (e.g. 12:10, 13:10, 14:10)
+  },
+  ssl: {
+	caCert: '/etc/cert/ca.crt',
+	clientKey: '/etc/cert/ingest.key',
+	clientCert: '/etc/cert/ingest.crt'
   }
 };

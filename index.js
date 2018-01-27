@@ -2,8 +2,10 @@
 
 const _ = require('lodash');
 const Promise = require('bluebird');
+const cron = require('node-cron');
 
 const price = require('./price');
+const config = require('./config');
 const common = require('./util/common');
 const logger = require('./util/logger');
 
@@ -48,9 +50,15 @@ function updateStatus(s) {
     })
 }
 
-return db.setupConnection()
-  .then(saveMeta)
-  .then(updatePrice)
-  .then(() => updateStatus(new Status()))
-  .catch(e => updateStatus(new Status(e)))
-  .finally(db.closeConnection);
+function doIngest() {
+  logger.info('======= Running ingest job now! =======');
+  return db.setupConnection()
+    .then(saveMeta)
+    .then(updatePrice)
+    .then(() => updateStatus(new Status()))
+    .catch(e => updateStatus(new Status(e)))
+    .finally(db.closeConnection);
+}
+
+// bring up the cron task
+cron.schedule(config.cron.schedule, doIngest);

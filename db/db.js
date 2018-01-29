@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const mongodb = require('mongodb');
 const Promise = require('bluebird');
 const MongoClient = mongodb.MongoClient;
@@ -28,7 +29,14 @@ function setupConnection() {
     return Promise.resolve();
   }
 
-  return Promise.resolve(MongoClient.connect(config.db.url))
+  const option = {
+	ssl: true,
+	sslCA: fs.readFileSync(config.ssl.caCert),
+	sslKey: fs.readFileSync(config.ssl.clientKey),
+	sslCert: fs.readFileSync(config.ssl.clientCert)
+  };
+
+  return Promise.resolve(MongoClient.connect(config.db.url, option))
     .tap(con => connection = con)
     .then(mongo => result.db = mongo.db('ingest'))
     .tap(() => logger.info('Connected to db', config.db.url))

@@ -4,6 +4,8 @@ services:
     container_name: ingest
     restart: always
     build: .
+    volumes:
+      - /etc/cert:/etc/cert
     links:
       - mongo
     depends_on:
@@ -11,8 +13,10 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    command: --sslMode requireSSL --sslPEMKeyFile /etc/cert/mongo.keypem.pem --sslCAFile /etc/cert/ca.crt
     restart: always
     volumes:
-      - ./data:/data/db
+      - /etc/cert:/etc/cert
+      - /mongo_data:/data/db
     ports:
       - "27017:27017"

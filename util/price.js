@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const cryptocompare = require('cryptocompare');
 
-const config = require('./config');
+const config = require('../config');
 
 global.fetch = require('node-fetch');
 

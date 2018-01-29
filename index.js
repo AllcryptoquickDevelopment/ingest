@@ -4,7 +4,7 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const cron = require('node-cron');
 
-const price = require('./price');
+const price = require('./util/price');
 const config = require('./config');
 const common = require('./util/common');
 const logger = require('./util/logger');

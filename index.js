@@ -20,6 +20,7 @@ function saveMeta() {
   // we first check if there is already coin data in db
   const lastStatus = dbStatus.getLatestStatus();
 
+  // TODO perform finer grain control of when to update meta data
   return lastStatus.then(s => {
     if (!s) {
       return common.getCoinMeta().then(dbMeta.saveMeta);

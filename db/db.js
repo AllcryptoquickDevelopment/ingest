@@ -29,12 +29,15 @@ function setupConnection() {
     return Promise.resolve();
   }
 
-  const option = {
-	ssl: true,
-	sslCA: fs.readFileSync(config.ssl.caCert),
-	sslKey: fs.readFileSync(config.ssl.clientKey),
-	sslCert: fs.readFileSync(config.ssl.clientCert)
-  };
+  let option = {};
+  if (config.ssl.enabled) {
+    option = {
+      ssl: true,
+      sslCA: fs.readFileSync(config.ssl.caCert),
+      sslKey: fs.readFileSync(config.ssl.clientKey),
+      sslCert: fs.readFileSync(config.ssl.clientCert)
+    };
+  }
 
   return Promise.resolve(MongoClient.connect(config.db.url, option))
     .tap(con => connection = con)

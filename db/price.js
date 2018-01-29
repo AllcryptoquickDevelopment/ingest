@@ -15,8 +15,8 @@ function insertPrices(prices) {
     const priceList = db.db.collection('coins').findOne({ "Symbol": price['FROMSYMBOL'] })
       .then(coin => coin.priceList)
       .catch(e => {
-        logger.error('Cannot find coin in database', price['FROMSYMBOL']);
-        logger.error(e.stack);
+        logger.warn('Cannot find coin in database', price['FROMSYMBOL']);
+        logger.warn(e.stack);
       });
 
     return priceList

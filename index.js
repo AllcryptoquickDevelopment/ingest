@@ -23,12 +23,12 @@ function saveMeta() {
   // TODO perform finer grain control of when to update meta data
   return lastStatus.then(s => {
     if (!s) {
-      return common.getCoinMeta().then(dbMeta.saveMeta);
+      return common.getCoinMeta().then(dbMeta.saveMeta)
+        .tap(() => logger.info('Coin meta saved'));
     }
 
     return Promise.resolve();
-  })
-    .tap(() => logger.info('Coin meta saved'));
+  });
 }
 
 function updatePrice() {

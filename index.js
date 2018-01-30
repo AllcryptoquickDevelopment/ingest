@@ -4,9 +4,8 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const cron = require('node-cron');
 
-const price = require('./util/price');
 const config = require('./config');
-const common = require('./util/common');
+const api = require('./api/coinmarketcap');
 const logger = require('./util/logger');
 
 const Status = require('./model/status');
@@ -23,7 +22,7 @@ function saveMeta() {
   // TODO perform finer grain control of when to update meta data
   return lastStatus.then(s => {
     if (!s) {
-      return common.getCoinMeta().then(dbMeta.saveMeta)
+      return api.getTickerMeta().then(dbMeta.saveMeta)
         .tap(() => logger.info('Coin meta saved'));
     }
 
@@ -32,8 +31,7 @@ function saveMeta() {
 }
 
 function updatePrice() {
-  return common.getCoinList()
-    .then(list => price.getAllPriceFull(list, ['BTC']))
+  return api.getTickerLastPrice()
     .then(dbPrice.insertPrices)
     .tap(() => logger.info('Coin price updated'));
 }
@@ -54,8 +52,8 @@ function updateStatus(s) {
 function doIngest() {
   logger.info('======= Running ingest job now! =======');
   return db.setupConnection()
-    .then(saveMeta)
-    .then(updatePrice)
+    .then(() => saveMeta())
+    .then(() => updatePrice())
     .then(() => updateStatus(new Status()))
     .catch(e => updateStatus(new Status(e)))
     .finally(db.closeConnection);

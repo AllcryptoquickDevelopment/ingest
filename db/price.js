@@ -12,10 +12,10 @@ const config = require('../config');
  */
 function insertPrices(prices) {
   return Promise.map(prices, (price) => {
-    const priceList = db.db.collection('coins').findOne({ "Symbol": price['FROMSYMBOL'] })
-      .then(coin => coin.priceList)
+    const priceList = db.db.collection('coins').findOne({ "symbol": price['symbol'] })
+      .then(coin => coin.price_list)
       .catch(e => {
-        logger.warn('Cannot find coin in database', price['FROMSYMBOL']);
+        logger.warn('Cannot find coin in database', price['symbol']);
         logger.warn(e.stack);
       });
 
@@ -24,11 +24,11 @@ function insertPrices(prices) {
       .then(list => [price].concat(list)) // TODO don't append if the update time are same
       .then(newList => {
         return db.db.collection('coins').updateOne(
-          { 'Symbol': price['FROMSYMBOL'] },
-          { $set: { priceList: newList } });
+          { 'symbol': price['symbol'] },
+          { $set: { price_list: newList } });
       })
       .catch(e => {
-        logger.error('Failed to update price for coin:', price['FROMSYMBOL']);
+        logger.error('Failed to update price for coin:', price['symbol']);
         logger.error(e.stack);
         return null;
       });

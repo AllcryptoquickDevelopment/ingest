@@ -15,8 +15,12 @@
     "cryptocompare": "^0.4.0",
     "lodash": "^4.17.4",
     "mongodb": "^3.0.1",
+    "node-cache": "^4.1.1",
     "node-cron": "^1.2.1",
     "node-fetch": "^1.7.3",
-    "simple-node-logger": "^0.93.33"
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "simple-node-logger": "^0.93.33",
+    "url": "^0.11.0"
   }
 }

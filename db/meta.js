@@ -9,7 +9,7 @@ const db = require('./db');
  */
 function saveMeta(meta) {
   return Promise.resolve(db.db.collection('coins').insertMany(meta))
-    .tap(() => db.db.collection('coins').ensureIndex({ "Symbol": 1 }));
+    .tap(() => db.db.collection('coins').ensureIndex({ "symbol": 1 }));
 }
 
 const result = {

@@ -10,7 +10,7 @@ module.exports = {
     concurrency: 30
   },
   cron: {
-    schedule: '1 * * * * *'  // run the task every minute for test purpose
+    schedule: '* * * * *'  // run the task every minute for test purpose
   },
   ssl: {
     enabled: false

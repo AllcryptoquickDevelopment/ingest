@@ -60,4 +60,4 @@ function doIngest() {
 }
 
 // bring up the cron task
-cron.schedule(config.cron.schedule, doIngest, true);
+cron.schedule(config.cron.schedule, doIngest);

@@ -7,7 +7,7 @@ const NodeCache = require('node-cache');
 const _ = require('lodash');
 
 const metaFields = ['id', 'name', 'symbol', 'max_supply'];
-const priceFields = ['symbol', 'price_usd', 'price_btc',
+const priceFields = ['id', 'price_usd', 'price_btc',
   '24h_volume_usd', 'market_cap_usd',
   'available_supply', 'total_supply',
   'percent_change_1h', 'percent_change_24h', 'percent_change_7d',
@@ -51,21 +51,21 @@ function getTickerSymbols(limit) {
 
 /**
  * Get Meta of tickers
- * @param {Array} [tickers] List of tickers, return all if missed
+ * @param {Array} [tickers] List of ticker ids, return all if missed
  */
 function getTickerMeta(tickers) {
   return getTickers()
-    .then(results => tickers ? results.filter(t => _.includes(tickers, t.symbol)) : results)
+    .then(results => tickers ? results.filter(t => _.includes(tickers, t.id)) : results)
     .map(ticker => _.pick(ticker, metaFields));
 }
 
 /**
  * Return the latest prices for coins
- * @param {Array} [tickers] List of tickers, return all if missed
+ * @param {Array} [tickers] List of ticker ids, return all if missed
  */
 function getTickerLastPrice(tickers) {
   return getTickers()
-    .then(results => tickers ? results.filter(t => _.includes(tickers, t.symbol)) : results)
+    .then(results => tickers ? results.filter(t => _.includes(tickers, t.id)) : results)
     .map(ticker => _.pick(ticker, priceFields));  //TODO deal with tickers without price data yet
 }
 

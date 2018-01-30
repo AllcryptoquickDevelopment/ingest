@@ -66,7 +66,7 @@ function getTickerMeta(tickers) {
 function getTickerLastPrice(tickers) {
   return getTickers()
     .then(results => tickers ? results.filter(t => _.includes(tickers, t.symbol)) : results)
-    .map(ticker => _.pick(ticker, priceFields));
+    .map(ticker => _.pick(ticker, priceFields));  //TODO deal with tickers without price data yet
 }
 
 const result = {

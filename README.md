@@ -9,5 +9,4 @@ Ingest service that collect data of cryptocoins and feeds into a database
 4. `npm run start`     
 
 ### Run with Docker
-1. `build -t cryptoinsights/ingest .`
-2. `docker-compose up`
+1. `docker-compose up`

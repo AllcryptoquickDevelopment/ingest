@@ -9,4 +9,9 @@ Ingest service that collect data of cryptocoins and feeds into a database
 4. `npm run start`     
 
 ### Run with Docker
-1. `docker-compose up`
+The docker mode is intended for production use. In order to do so:     
+A folder `/etc/cert` is required which holds all the ssl keys/certs that are used by mongodb.      
+And a folder `/mongo_data` is required which is used as the dbpath for mongodb.     
+
+1. Clone the project
+2. `docker-compose up`

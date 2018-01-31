@@ -15,7 +15,7 @@ function insertPrices(prices) {
     const priceList = db.db.collection('coins').findOne({ "id": price['id'] })
       .then(coin => coin.price_list)
       .catch(e => {
-        logger.warn('Cannot find coin in database', price['id']);
+        logger.warn('Cannot find coin in database: ', price['id']);
         logger.warn(e.stack);
       });
 

@@ -16,17 +16,13 @@ const dbPrice = require('./db/price');
 const dbStatus = require('./db/status');
 
 function saveMeta() {
-  // we first check if there is already coin data in db
-  const lastStatus = dbStatus.getLatestStatus();
+  const allCoinMeta = api.getTickerMeta();
+  const coinMetaSaved = dbMeta.getAllSymbols();
 
-  // TODO perform finer grain control of when to update meta data
-  return lastStatus.then(s => {
-    if (!s) {
-      return api.getTickerMeta().then(dbMeta.saveMeta)
-        .tap(() => logger.info('Coin meta saved'));
-    }
-
-    return Promise.resolve();
+  return Promise.join(allCoinMeta, coinMetaSaved, (allMeta, savedSymbols) => {
+    const metaToInsert = allMeta.filter(meta => !savedSymbols.includes(meta.symbol));
+    return dbMeta.saveMeta(metaToInsert)
+      .tap(() => console.log(`${metaToInsert.length} coins meta inserted`));
   });
 }
 

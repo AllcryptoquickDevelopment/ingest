@@ -13,18 +13,18 @@ function saveMeta(meta) {
   }
 
   return Promise.resolve(db.db.collection('coins').insertMany(meta))
-    .tap(() => db.db.collection('coins').ensureIndex({ "symbol": 1 }));
+    .tap(() => db.db.collection('coins').ensureIndex({ "id": 1 }));
 }
 
-function getAllSymbols() {
+function getAllId() {
   return Promise.map(
-    db.db.collection('coins').find().project({ symbol: 1, _id: 0 }).toArray(),
-    meta => meta.symbol);
+    db.db.collection('coins').find().project({ id: 1, _id: 0 }).toArray(),
+    meta => meta.id);
 }
 
 const result = {
   saveMeta,
-  getAllSymbols
+  getAllId
 };
 
 module.exports = result;

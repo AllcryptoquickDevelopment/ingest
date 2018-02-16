@@ -17,10 +17,10 @@ const dbStatus = require('./db/status');
 
 function saveMeta() {
   const allCoinMeta = api.getTickerMeta();
-  const coinMetaSaved = dbMeta.getAllSymbols();
+  const coinIdSaved = dbMeta.getAllId();
 
-  return Promise.join(allCoinMeta, coinMetaSaved, (allMeta, savedSymbols) => {
-    const metaToInsert = allMeta.filter(meta => !savedSymbols.includes(meta.symbol));
+  return Promise.join(allCoinMeta, coinIdSaved, (allMeta, savedIds) => {
+    const metaToInsert = allMeta.filter(meta => !savedIds.includes(meta.id));
     return dbMeta.saveMeta(metaToInsert)
       .tap(() => console.log(`${metaToInsert.length} coins meta inserted`));
   });

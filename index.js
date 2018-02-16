@@ -22,7 +22,7 @@ function saveMeta() {
   return Promise.join(allCoinMeta, coinIdSaved, (allMeta, savedIds) => {
     const metaToInsert = allMeta.filter(meta => !savedIds.includes(meta.id));
     return dbMeta.saveMeta(metaToInsert)
-      .tap(() => console.log(`${metaToInsert.length} coins meta inserted`));
+      .tap(() => logger.info(`${metaToInsert.length} coins meta inserted`));
   });
 }
 
